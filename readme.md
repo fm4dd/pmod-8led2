@@ -6,6 +6,7 @@
 
 This PMOD provides 8x dual-color LED display output to FPGA designs via two double row PMODs.
 It is possible to install either type of dual-color LEDs: “common cathode” or “common anode”. The default is “common cathode”, which allows for working with normal logic. WIth normal logic, setting the output “HIGH” lights up the LED. If "common anode" LEDs are installed, JP1 must separate GND, and close the connection to + 3.3V. Common anode uses inverted logic, The LEDs light up when the output is set "LOW".
+[fpga.fm4dd.com](http://fpga.fm4dd.com/)
 
 ### Schematic
 [![8LED2 PMOD Schematics](images/8led2-schema.png)](images/8led2-schema.png)
