@@ -48,28 +48,27 @@ The connection to Intels DE0-Nano-SoC is made through the pmod2nano adapter.
 
 ![DE0-Nano-SoC](images/de0-nano-soc-top90.jpg)
 
-
  J1# |  Label | Description   | GPIO0A | GPIO1A
 -----|--------|---------------|--------|--------
-1    |  D1    | LED D1 green  | PIN_W12|PIN_AA15
-2    |  D2    | LED D2 green  | PIN_Y8 |PIN_AG26
-3    |  D3    | LED D3 green  | PIN_W8 |PIN_AF23
-4    |  D4    | LED D4 green  | PIN_Y5 |PIN_AF21
-7    |  D5    | LED D5 green  | PIN_AF8|PIN_AH27
-8    |  D6    | LED D6 green  | PIN_AB4|PIN_AH24
-9    |  D7    | LED D7 green  | PIN_Y4 |PIN_AE22
-10   |  D8    | LED D8 green  | PIN_U11|PIN_AG20
+1    |  D1    | LED D1 green  | PIN_AF8|PIN_AH27
+2    |  D2    | LED D2 green  | PIN_AB4|PIN_AH24
+3    |  D3    | LED D3 green  | PIN_Y4 |PIN_AE22
+4    |  D4    | LED D4 green  | PIN_U11|PIN_AG20
+7    |  D5    | LED D5 green  | PIN_W12|PIN_AA15
+8    |  D6    | LED D6 green  | PIN_Y8 |PIN_AG26
+9    |  D7    | LED D7 green  | PIN_W8 |PIN_AF23
+10   |  D8    | LED D8 green  | PIN_Y5 |PIN_AF21
 
  J2# |  Label | Description   | GPIO0B | GPIO1B
 -----|--------|---------------|--------|--------
-1    |  D1    | LED D1 red    | PIN_AF4| PIN_AH23
-2    |  D2    | LED D2 red    | PIN_AF5| PIN_AE19
-3    |  D3    | LED D3 red    | PIN_T13| PIN_AD19
-4    |  D4    | LED D4 red    | PIN_AE7| PIN_AE24
-7    |  D5    | LED D5 red    | PIN_AG6| PIN_AG23
-8    |  D6    | LED D6 red    | PIN_AE4| PIN_AF18
-9    |  D7    | LED D7 red    | PIN_T11| PIN_AE20
-10   |  D8    | LED D8 red    | PIN_AF6| PIN_AD20
+1    |  D1    | LED D1 red    | PIN_AG6| PIN_AG23
+2    |  D2    | LED D2 red    | PIN_AE4| PIN_AF18
+3    |  D3    | LED D3 red    | PIN_T11| PIN_AE20
+4    |  D4    | LED D4 red    | PIN_AF6| PIN_AD20
+7    |  D5    | LED D5 red    | PIN_AF4| PIN_AH23
+8    |  D6    | LED D6 red    | PIN_AF5| PIN_AE19
+9    |  D7    | LED D7 red    | PIN_T13| PIN_AD19
+10   |  D8    | LED D8 red    | PIN_AE7| PIN_AE24
 
 ### Example Code
 
@@ -126,4 +125,49 @@ module pmod8led2_2 (
     end
   end
 endmodule
+```
+
+#### VHDL
+
+The Verilog example pmod8led2_2.v converted to VHDL as pmod8led2_3.vhd:
+
+```
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity pmod_8led2_3 is
+port ( clk: in STD_LOGIC;
+  pmodledg: out STD_LOGIC_VECTOR(0 to 7) := "00000000";
+  pmodledr: out STD_LOGIC_VECTOR(0 to 7) := "00000000"
+);
+end pmod_8led2_3;
+
+architecture arch of pmod_8led2_3 is
+  signal clk_1hz: STD_LOGIC := '0';
+  signal  lednum: STD_LOGIC_VECTOR(6 downto 0) := "0000000";
+
+  begin
+    counter_p: process( clk, clk_1hz, lednum )
+    variable count: INTEGER := 0;
+    begin
+      if( rising_edge(clk) ) then
+        count := count + 1;
+        if( count = 24999999 ) then
+               count := 0;
+               clk_1hz <= NOT clk_1hz;
+                 lednum  <= std_logic_vector( unsigned(lednum) + 1);
+        end if;
+           end if;
+
+    pmodledr(0) <= clk_1hz;
+    pmodledg(1) <= lednum(6);
+    pmodledg(2) <= lednum(5);
+    pmodledg(3) <= lednum(4);
+    pmodledg(4) <= lednum(3);
+    pmodledg(5) <= lednum(2);
+    pmodledg(6) <= lednum(1);
+    pmodledg(7) <= lednum(0);
+  end process counter_p;
+end arch;
 ```
