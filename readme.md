@@ -171,3 +171,6 @@ architecture arch of pmod_8led2_3 is
   end process counter_p;
 end arch;
 ```
+
+<img src="images/de0-nano-soc-tslide4.jpg" width="240px">
+8LED2 PMOD on a DE0-Nano-SoC board
