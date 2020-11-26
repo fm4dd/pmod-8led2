@@ -5,7 +5,7 @@
 <img src="images/8led2-top.jpg" width="240px">
 
 This PMOD provides 8x dual-color LED display output to FPGA designs via two double row PMODs.
-It is possible to install either type of dual-color LEDs: “common cathode” or “common anode”. The default is “common cathode”, which allows for working with normal logic. WIth normal logic, setting the output “HIGH” lights up the LED. If "common anode" LEDs are installed, JP1 must separate GND, and close the connection to + 3.3V. Common anode uses inverted logic, The LEDs light up when the output is set "LOW".
+It is possible to install either type of dual-color LEDs: ï¿½common cathodeï¿½ or ï¿½common anodeï¿½. The default is ï¿½common cathodeï¿½, which allows for working with normal logic. WIth normal logic, setting the output ï¿½HIGHï¿½ lights up the LED. If "common anode" LEDs are installed, JP1 must separate GND, and close the connection to + 3.3V. Common anode uses inverted logic, The LEDs light up when the output is set "LOW".
 [fpga.fm4dd.com](http://fpga.fm4dd.com/)
 
 ### Schematic
@@ -172,5 +172,8 @@ architecture arch of pmod_8led2_3 is
 end arch;
 ```
 
-<img src="images/de0-nano-soc-tslide4.jpg" width="240px">
+<img src="images/de0-nano-soc-tslide4.jpg" width="480px">
 8LED2 PMOD on a DE0-Nano-SoC board
+
+<img src="images/ulx3s-8led2.jpg" width="480px">
+8LED2 PMOD on a ULX3S Lattice ECP 85K board
