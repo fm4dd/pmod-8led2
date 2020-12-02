@@ -27,7 +27,7 @@ architecture arch of pmod_8led2_3 is
     begin
       if( rising_edge(clk) ) then
 	     count := count + 1;
-        if( count = 12499999 ) then
+        if( count = 5999999 ) then
   	       count := 0;
 	       clk_1hz <= NOT clk_1hz;
                lednum  := std_logic_vector( unsigned(lednum) + 1);

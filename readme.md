@@ -5,7 +5,7 @@
 <img src="images/8led2-top.jpg" width="240px">
 
 This PMOD provides 8x dual-color LED display output to FPGA designs via two double row PMODs.
-It is possible to install either type of dual-color LEDs: �common cathode� or �common anode�. The default is �common cathode�, which allows for working with normal logic. WIth normal logic, setting the output �HIGH� lights up the LED. If "common anode" LEDs are installed, JP1 must separate GND, and close the connection to + 3.3V. Common anode uses inverted logic, The LEDs light up when the output is set "LOW".
+It is possible to install either type of dual-color LEDs: "common cathode" or "common anode". The default is "common cathode", which allows for working with normal logic. With normal logic, setting the output "HIGH" lights up the LED. If "common anode" LEDs are installed, JP1 must separate GND, and close the connection to + 3.3V. Common anode uses inverted logic, The LEDs light up when the output is set "LOW".
 [fpga.fm4dd.com](http://fpga.fm4dd.com/)
 
 ### Schematic
@@ -132,12 +132,20 @@ endmodule
 The Verilog example pmod8led2_2.v converted to VHDL as pmod8led2_3.vhd:
 
 ```
+-- -------------------------------------------------------
+-- This program is a binary counter, displayed on the pmod
+-- LED D1-7 green color. The 1Hz clock pulse is on D8 red.
+-- 12MHz clock: set breakpoint at 23'd5999999 (icebreaker)
+-- 50MHz clock: set breakpoint at 25'd24999999 (de0-nano)
+-- 25MHz clock: set breakpoint at 24'd12499999 (ulx3s)
+-- -------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity pmod_8led2_3 is
-port ( clk: in STD_LOGIC;
+port (
+       clk: in STD_LOGIC;
   pmodledg: out STD_LOGIC_VECTOR(0 to 7) := "00000000";
   pmodledr: out STD_LOGIC_VECTOR(0 to 7) := "00000000"
 );
@@ -145,22 +153,23 @@ end pmod_8led2_3;
 
 architecture arch of pmod_8led2_3 is
   signal clk_1hz: STD_LOGIC := '0';
-  signal  lednum: STD_LOGIC_VECTOR(6 downto 0) := "0000000";
 
   begin
-    counter_p: process( clk, clk_1hz, lednum )
+    counter_p: process( clk, clk_1hz )
     variable count: INTEGER := 0;
+    variable lednum: STD_LOGIC_VECTOR(6 downto 0) := "0000000";
     begin
       if( rising_edge(clk) ) then
-        count := count + 1;
-        if( count = 24999999 ) then
+             count := count + 1;
+        if( count = 5999999 ) then
                count := 0;
                clk_1hz <= NOT clk_1hz;
-                 lednum  <= std_logic_vector( unsigned(lednum) + 1);
+               lednum  := std_logic_vector( unsigned(lednum) + 1);
         end if;
            end if;
 
-    pmodledr(0) <= clk_1hz;
+    pmodledr <= (0 => clk_1hz, others => '0');
+    pmodledg(0) <= '0';
     pmodledg(1) <= lednum(6);
     pmodledg(2) <= lednum(5);
     pmodledg(3) <= lednum(4);
@@ -168,6 +177,7 @@ architecture arch of pmod_8led2_3 is
     pmodledg(5) <= lednum(2);
     pmodledg(6) <= lednum(1);
     pmodledg(7) <= lednum(0);
+
   end process counter_p;
 end arch;
 ```
